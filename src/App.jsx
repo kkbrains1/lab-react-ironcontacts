@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import contacts from './contacts.json';
 
-const firstFiveContacts = [...contacts].slice(0, 5);
+//const firstFiveContacts = [...contacts].slice(0, 5);
 
 /* const ContactsTable = (props) => {
   //console.log(props);
@@ -25,17 +25,20 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      contactsList: firstFiveContacts,
+      contactsList: [...contacts].slice(0, 5),
+      contactsStock: [...contacts].slice(5),
     };
     //console.log('this state is', this.state);
   }
 
   addContact = () => {
     let index = Math.floor(
-      Math.random() * (contacts.length - firstFiveContacts.length) +
-        firstFiveContacts.length
+      Math.random() *
+        (this.state.contactsStock.length - this.state.contactsList.length) +
+        this.state.contactsList.length
     );
-    let newContact = [...contacts].splice(index, 1);
+    let newContact = this.state.contactsStock.splice(index, 1);
+
     this.setState({
       contactsList: [...this.state.contactsList].concat(newContact),
       //contactsList: [...this.state.contactsList, newContact],
@@ -71,16 +74,17 @@ class App extends Component {
     return (
       <div className="App">
         <h1>IronContacts</h1>
-        <button onClick={this.addContact}>Add Random Contact</button>
-        <button onClick={this.sortName}>Sort by Name</button>
-        <button onClick={this.sortPopularity}>Sort by Popularity</button>
+        <span>
+          <button onClick={this.addContact}>Add Random Contact</button>
+          <button onClick={this.sortName}>Sort by Name</button>
+          <button onClick={this.sortPopularity}>Sort by Popularity</button>
+        </span>
         <table>
           <thead>
             <tr>
               <td>Picture</td>
               <td>Name</td>
               <td>Popularity</td>
-              <td>Id</td>
               <td>Action</td>
             </tr>
           </thead>
@@ -92,11 +96,10 @@ class App extends Component {
                 </td>
                 <td>{contact.name}</td>
                 <td>{contact.popularity.toFixed(2)}</td>
-                <td>{contact.id}</td>
                 <td>
                   <button onClick={() => this.deleteContact(contact.id)}>
                     <span role="img" aria-label="delete-button">
-                    💥DELETE💥
+                      💥DELETE💥
                     </span>
                   </button>
                 </td>
